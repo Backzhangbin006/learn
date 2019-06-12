@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "C:\\Users\\zhangbin\\Desktop\\zb_lesson"
+		},
+		{
+			"path": "C:\\Users\\zhangbin\\Desktop\\GIT-REBASE"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true
+	}
+}
