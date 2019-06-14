@@ -61,6 +61,6 @@ export default {
       color rgb(77,85,93)
       text-decoration none    //  干掉页面下划线
 
-      &.active
+      &.router-link-active
         color rgb(240,20,20)
 </style>
