@@ -12,39 +12,42 @@
 
 <script>
 export default {
-  name: 'cartcontrol',
-  props: {
-    food: {
-      type: Object
+  name:'cartcontrol',
+  props:{
+    food:{
+      type:Object
     }
   },
-  data() {
+  data () {
     return {
 
     }
   },
+  // created() {
+  //   console.log(this.food)
+  // },
   methods: {
-    addCart(e) {
-      // console.log(e)
-      if(!e._constructed) { //如果不存在着属性，则为原生点击事件，不执行下面的函数
+    addCart(event){
+      console.log(event)
+      if(!event._constructed){ //如果不存在这个属性，则为原生点击事件，不执行下面的函数
         return
       }
-      if(!this.food.count) {
-        this.$set(this.food, 'count', 1)
-      } else {
+      if(!this.food.count){
+        this.$set(this.food,'count',1)
+      }else{
         this.food.count++
       }
-      this.$emit('add', event.target)
-    }
-  },
-  decreaseCart() {
-    if(!e._constructed) { //如果不存在着属性，则为原生点击事件，不执行下面的函数
+      this.$emit('add',event.target)
+    },
+    decreaseCart(){
+      if(!event._constructed){ //如果不存在这个属性，则为原生点击事件，不执行下面的函数
         return
       }
-      if (this.food.count) {
+      if(this.food.count){
         this.food.count--
       }
-  }
+    }
+  },
 }
 </script>
 

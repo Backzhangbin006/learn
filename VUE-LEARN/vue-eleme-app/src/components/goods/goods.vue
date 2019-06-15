@@ -3,47 +3,49 @@
     <div class="goods">
       <div class="menu-wrapper" ref="menuWrapper">
         <ul>
-          <li 
-          v-for="(item, index) in goods"
-          :key="index"
-          class="menu-item"
-          :class="{'current' : currentIndex === index}"
-          @click="selectMenu(index, $event)"
+          <li
+            v-for="(item,index) in goods"
+            :key="index"
+            class="menu-item"
+            :class="{'current' : currentIndex === index}"
+            @click="selectMenu(index,$event)"
           >
-          <span class="text border-1px">
-            <span class="icon" v-show="item.type > 0" :class="classMap[item.type]"></span>
-            {{item.name}}
-          </span>
+            <span class="text border-1px">
+              <span class="icon" v-show="item.type>0" :class="classMap[item.type]"></span>
+              {{item.name}}
+            </span>
           </li>
         </ul>
       </div>
       <div class="foods-wrapper" ref="foodsWrapper">
         <ul>
-          <li v-for="(item, index) in goods" :key="index" class="food-list" ref="foodList">
-            <h1 class="title">{{item.name}}</h1>
-            <ul>
-              <li v-for="(food, index) in item.foods" :key="index" class="food-item border-1px">
-                <div class="icon">
-                  <img :src="food.icon" width="57" height="57" alt="">
+          <li v-for="(item,index) in goods" :key="index" 
+          class="food-list" ref="foodList"
+          >
+          <h1 class="title">{{item.name}}</h1>
+          <ul>
+            <li v-for="(food,index) in item.foods" :key="index" class="food-item border-1px">
+              <div class="icon">
+                <img :src="food.icon" width="57" height="57" alt="">
+              </div>
+              <div class="content">
+                <h2 class="name">{{food.name}}</h2>
+                <p class="desc">{{food.description}}</p>
+                <div class="extra">
+                  <span class="count">月售{{food.sellCount}}份</span>
+                  <span>好评率{{food.rating}}%</span>
                 </div>
-                <div class="content">
-                  <h2 class="name">{{food.name}}</h2>
-                  <p class="desc">{{food.description}}</p>
-                  <div class="extra">
-                    <span class="count">月售{{food.sellCount}}份</span>
-                    <span>好评率{{food.rating}}%</span>
-                  </div>
-                  <div class="price">
-                    <span class="now">￥{{food.price}}</span>
-                    <span class="old" v-show="food.oldprice">￥{{food.oldprice}}</span>
-                  </div>
-                  <!-- 添加按钮 -->
-                  <div class="cartcontrol-wrapper">
-                    <cartcontrol :food="food" @add="addFood"></cartcontrol>
-                  </div>
+                <div class="price">
+                  <span class="now">￥{{food.price}}</span>
+                  <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
-              </li>
-            </ul>
+                <!-- 添加 -->
+                <div class="cartcontrol-wrapper">
+                  <cartcontrol :food="food" @add="addFood"></cartcontrol>
+                </div>
+              </div>
+            </li>
+          </ul>
           </li>
         </ul>
       </div>
@@ -51,52 +53,99 @@
   </div>
 </template>
 
+
 <script>
 import BScroll from 'better-scroll'
 import cartcontrol from '@/components/cartcontrol/cartcontrol'
 export default {
   name: 'Goods',
+ 
   data () {
     return {
       classMap: [],
-      goods: []
+      goods:[],
+      listHeight:[],
+      scrollY:0
     }
   },
-  components: {
+  computed: {
+    currentIndex (){
+      for(let i = 0;i <this.listHeight.length;i++) {
+        let height1 = this.listHeight[i];
+        let height2 = this.listHeight[i+1];
+        if(!height2 || (this.scrollY >=height1 && this.scrollY < height2)){
+          return i
+        }
+      }
+      return 0
+    }
+  },
+  components:{
     cartcontrol
   },
   methods: {
+    selectMenu (index,event){
+      if(!event._constructed){
+        return
+      }
+      let foodList = this.$refs.foodList
+      let el = foodList[index] 
+      this.foodsScroll.scrollToElement(el,300)
+    },
     _initScroll () {
       this.menuScroll = new BScroll(this.$refs.menuWrapper, {
         click: true
-      })
+      }),
+      this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
+        click: true,
+        probeType:3
+       }) 
+       this.foodsScroll.on('scroll',pos =>{
+        //  console.log(pos)
+        // Math.round四舍五入方法
+         this.scrollY = Math.abs(Math.round(pos.y))
+        //  console.log(this.scrollY)  Y轴滚动的距离
+       })
     },
-    addFood (target) {
+    addFood(target){
       this._drop(target)
     },
-    _drop (target) {
-      // 体验优化，异步执行下落动画
+    _drop(target) {
+      //体验优化，异步执行下落动画
       this.$nextTick(() => {
         // 动画组件
       })
-    }
+    },
+   _calculateHeight(){
+      let foodList = this.$refs.foodList
+      let height = 0;
+      this.listHeight.push(height);
+      for(let i = 0; i < foodList.length;i++){
+        let item = foodList[i]
+        height += item.clientHeight  //clientHeight获取dom结构高度
+        this.listHeight.push(height)
+      }
+      }
+    
   },
-  created () {
+  created() {
     this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
 
-    this.$http.get('https://www.easy-mock.com/mock/5cbf00c6330edc5317b81645/goods')
-      .then(res => {
-        // console.log(res)
+    this.$http.get('https://www.easy-mock.com/mock/5ca4580fc4e9a575b66b62b7/example/goods')
+      .then(res=>{
+        // console.log(res);
         if (res.data.errno === 0) {
           this.goods = res.data.data
-          this.$nextTick(() => { //页面渲染完成才能执行
+          this.$nextTick(() => { //页面渲染才能执行（判断页面是否渲染完成）
             this._initScroll()
+            this._calculateHeight()
           })
         }
       })
-  }
+  },
 }
 </script>
+
 
 <style lang="stylus">
 @import '../../common/stylus/mixin.styl'
