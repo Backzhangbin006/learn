@@ -49,6 +49,8 @@
           </li>
         </ul>
       </div>
+      <shopcart ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice"
+      :minPrice="seller.minPrice"></shopcart>
     </div>
   </div>
 </template>
@@ -57,9 +59,14 @@
 <script>
 import BScroll from 'better-scroll'
 import cartcontrol from '@/components/cartcontrol/cartcontrol'
+import shopcart from '@/components/shopcart/shopcart'
 export default {
   name: 'Goods',
- 
+  props: {
+    seller:{
+      type: Object
+    }
+  },
   data () {
     return {
       classMap: [],
@@ -78,10 +85,22 @@ export default {
         }
       }
       return 0
+    },
+    selectFoods () {
+      let foods = []
+      this.goods.forEach(good => {  // forEach()遍历方法
+        good.foods.forEach(food => {
+          if (food.count) {
+            foods.push(food)
+          }
+        })
+      })
+      return foods
     }
   },
   components:{
-    cartcontrol
+    cartcontrol,
+    shopcart
   },
   methods: {
     selectMenu (index,event){
@@ -91,6 +110,11 @@ export default {
       let foodList = this.$refs.foodList
       let el = foodList[index] 
       this.foodsScroll.scrollToElement(el,300)
+    },
+    selectFoods (food,event) {
+      if(!event._constructed){
+        return
+      }
     },
     _initScroll () {
       this.menuScroll = new BScroll(this.$refs.menuWrapper, {
@@ -110,12 +134,25 @@ export default {
     addFood(target){
       this._drop(target)
     },
-    _drop(target) {
-      //体验优化，异步执行下落动画
-      this.$nextTick(() => {
-        // 动画组件
-      })
+    drop (el) {
+      for (let i = 0; i < this.balls.length; i++) {
+        let ball = this.balls[i]
+        if (!ball.show) {
+          ball.show = true
+          ball.el = el
+          this.dropBalls.push(ball)
+          return
+        }
+      }
     },
+
+    // _drop(target) {
+    //   //体验优化，异步执行下落动画
+    //   this.$nextTick(() => {
+    //     // 动画组件
+    //     this.$refs.shopcart.drop(target);
+    //   })
+    // },
    _calculateHeight(){
       let foodList = this.$refs.foodList
       let height = 0;
@@ -131,7 +168,7 @@ export default {
   created() {
     this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
 
-    this.$http.get('https://www.easy-mock.com/mock/5ca4580fc4e9a575b66b62b7/example/goods')
+    this.$http.get('https://www.easy-mock.com/mock/5cbf00c6330edc5317b81645/goods')
       .then(res=>{
         // console.log(res);
         if (res.data.errno === 0) {
