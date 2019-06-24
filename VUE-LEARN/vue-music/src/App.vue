@@ -17,7 +17,6 @@
     <v-play></v-play>
     <!-- sidebar -->
     <v-sidebar></v-sidebar>
-    <v-search-box></v-search-box>
   </div>
 </template>
 
@@ -26,15 +25,13 @@ import header from '@/components/header'
 import tab from '@/components/tab'
 import sidebar from '@/components/sidebar'
 import play from '@/components/play'
-import searchBox from '@/components/searchBox'
 export default {
   name: 'App',
   components: {
     'v-header': header,
     'v-tab': tab,
     'v-sidebar': sidebar,
-    'v-play': play,
-    'v-search-box':searchBox,
+    'v-play': play
   }
 }
 </script>

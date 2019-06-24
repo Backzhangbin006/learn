@@ -2,8 +2,8 @@ import api from '../../api'
 import * as types from '../types'
 
 const state = {
-  showSidebar: true,
-  fullScreen : false
+  showSidebar: false,
+  fullScreen: false
 }
 
 const mutations = {
@@ -16,12 +16,12 @@ const mutations = {
 }
 
 const actions = {
-  setShowSidebar({commit}, status) {
+  setShowSidebar ({commit}, status) {
     commit(types.COM_SHOW_SIDE_BAR, status)
   },
-  selectPlaySong({ commit },status){
+  selectPlaySong ({ commit }, status) {
     // let playlist = state.playlist.slice()
-    commit(types.SET_FULL_SCREEN,status)
+    commit(types.SET_FULL_SCREEN, status)
   }
 }
 

@@ -1,5 +1,6 @@
 <template>
   <div class="play" v-show="playList.length>0">
+    <!-- 播放页面 -->
     <transition 
       name="normal"
       @enter="enter"
@@ -20,20 +21,25 @@
           <h2 class="subtitle" v-html="(currentSong.ar && currentSong.ar[0].name) || (currentSong.artists && currentSong.artists[0].name)"></h2>
         </div>
         <!-- 播放页面的内容 -->
-        <div class="middle" @touchstart.prevent="middleTouchStart" 
-        @touchmove.prevent="middleTouchMove" @touchend="middleTouchEnd">
+        <div class="middle" 
+        @touchstart.prevent="middleTouchStart"
+        @touchmove.prevent="middleTouchMove"
+        @touchend="middleTouchEnd"
+        >
           <div class="middle-l" ref="middleL">
             <div class="cd-wrapper" ref="cdWrapper">
               <div class="cd" ref="imageWrapper">
-                <img :src="(currentSong.al && currentSong.al.picUrl) || (currentSong.artists && currentSong.artists[0].img1v1Url)" 
-                alt="" 
-                ref="image" 
-                :class="cdCls" 
-                class="image">
+                <img 
+                  :src="(currentSong.al && currentSong.al.picUrl) || (currentSong.artists && currentSong.artists[0].img1v1Url)" 
+                  alt=""
+                  ref="image"
+                  :class="cdCls"
+                  class="image"
+                >
               </div>
             </div>
             <div class="playing-lyric-wrapper">
-              <div class="playin-lyric">{{playingLyric}}</div>
+              <div class="playing-lyric">{{playingLyric}}</div>
             </div>
           </div>
         </div>
@@ -44,8 +50,13 @@
       <div class="mini-player" v-show="!fullScreen" @click="open">
         <div class="picture">
           <div class="imgWrapper" ref="miniWrapper">
-            <img src="" alt="" ref="miniImage" :class="cdCls" width="40" height="40" v-lazy="(currentSong.al && currentSong.al.picUrl) || (currentSong.artists && currentSong.artists[0].img1v1Url)">
-
+            <img 
+              ref="miniImage"
+              :class="cdCls"
+              width="40"
+              height="40"
+              v-lazy="(currentSong.al && currentSong.al.picUrl) || (currentSong.artists && currentSong.artists[0].img1v1Url)"
+            >
           </div>
         </div>
         <div class="text">
@@ -63,52 +74,50 @@
           <i class="icon">&#xe927;</i>
         </div>
         <div class="bottom-progress-bar">
-          <div class="bottom-progress" :style="{width:(currentTime/ duration).toFixed(3) * 100 + '%'}"></div>
+          <div class="bottom-progress" :style="{width: (currentTime / duration).toFixed(3)*100 + '%'}"></div>
         </div>
       </div>
     </transition>
   </div>
 </template>
 
-
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  data() {
+  data () {
     return {
+      playList: [1],
       currentSong: [],
+      playing: false,
       currentTime: 3,
       duration: 1,
-      playList:[1],
-      playing: false,
-    };
+      playingLyric: '我叹服你的技巧'
+    }
   },
   computed: {
     cdCls () {
       return this.playing ? 'play' : ''
     },
-       ...mapGetters([
+    ...mapGetters([
       'fullScreen'
     ])
   },
   methods: {
-    enter() {},
-    afterEnter() {},
-    leave() {},
-    afterLeave() {},
-    middleTouchStart(){},
-    middleTouchMove(){},
-    middleTouchEnd(){},
-    playingLyric () {},
-    open(){
-      this.$store.dispatch('selectPlaySong',true)
-    } ,
-    back(){
-      this.$store.dispatch('selectPlaySong',false)
-    }
-
+    open () {
+      this.$store.dispatch('selectPlaySong', true)
+    },
+    enter () {},
+    afterEnter () {},
+    leave () {},
+    afterLeave () {},
+    back () {
+      this.$store.dispatch('selectPlaySong', false)
+    },
+    middleTouchStart () {},
+    middleTouchMove () {},
+    middleTouchEnd () {}
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -276,10 +285,11 @@ export default {
         height 100%
         background linear-gradient(#902541, #902444)
 
+
+
 @keyframes rotate
   0%
     transform rotate(0)
   100%
     transform rotate(360deg)
 </style>
-

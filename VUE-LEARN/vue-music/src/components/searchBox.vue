@@ -1,17 +1,15 @@
+
 <template>
   <div class="search-box">
     <i class="icon icon-search">&#xe638;</i>
     <input type="text" ref="query" v-model="query" class="box" :placeholder="placeholder">
-    <i class="icon icon-dismiss" v-show="query" @click="clear">&#xe638;</i>
+    <i class="icon icon-dismiss" v-show="query" @click="clear">&#xe656;</i>
   </div>
 </template>
 
 <script>
-import searchBox from '@/components/searchBox'
+import { debounce } from '@/common/util'
 export default {
-  components: {
-    'v-search-box': searchBox
-  },
   props: {
     placeholder: {
       type: String,
@@ -30,14 +28,18 @@ export default {
     setQuery (query) {
       this.query = query
     },
-    blur () {    // blur方法：失去焦点
+    blur () {
       this.$refs.query.blur()
     }
+  },
+  created () {
+    this.$watch('query', debounce((newQuery) => {
+      this.$emit('query', newQuery)
+    }))
   }
 }
 </script>
-
-<style lang="stylus" scoped>
+<style lang='stylus' scoped>
 @import '../assets/css/function'
 .search-box 
   display flex
@@ -65,5 +67,4 @@ export default {
     font-size 20px
     margin-right px2rem(10px)
     color #6b6a6a
-
 </style>
