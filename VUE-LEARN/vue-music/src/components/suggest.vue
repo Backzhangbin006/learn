@@ -9,12 +9,7 @@
     @beforeScroll="listScroll"
   >
     <ul class="suggest-list">
-      <li
-        @click="selectItem(item)"
-        class="suggest-item"
-        v-for="(item, index) in result"
-        :key="index"
-      >
+      <li @click="selectItem(item)" class="suggest-item" v-for="(item, index) in result" :key="index">
         <div class="icon">
           <i class="icon">&#xe641;</i>
         </div>
@@ -30,10 +25,13 @@
   </v-scroll>
 </template>
 
-<script>
-import scroll from "@/components/scroll";
+<script type="text/ecmascript-6">
+import scroll from '@/components/scroll'
+// import load from '@/components/load'
 import api from '@/api'
+
 const limit = 20
+
 export default {
   name: 'suggest',
   props: {
@@ -42,20 +40,17 @@ export default {
       default: ''
     }
   },
-  data () {
+  data() {
     return {
       page: 1,
-      pullup:true,
+      pullup: true,
       beforeScroll: true,
       hasMore: true,
       result: []
     }
   },
-  components: {
-    "v-scroll": scroll
-  },
   methods: {
-    refresh () {
+    refresh() {
       this.$refs.suggest.refresh()
     },
     fetchResult(page) {
@@ -66,13 +61,12 @@ export default {
       }
       api.MusicSearch(params).then(res => {
         if (res.code === 200) {
-          // console.log(res)
-          this.result = [...this.result, ...res.result.songs]     // 用于上拉加载更多数据，用push也是一样的效果
+          this.result = [...this.result, ...res.result.songs]
           this._checkMore(res.result)
         }
       })
     },
-    search () {
+    search() {
       this.page = 1
       this.hasMore = true
       this.$refs.suggest.scrollTo(0, 0)
@@ -86,30 +80,34 @@ export default {
       this.page++
       this.fetchResult(this.page)
     },
-    listScroll () {
+    listScroll() {
       this.$emit('listScroll')
     },
-    selectItem (item) {
-      this.$emit('select',item)
+    selectItem(item) {
+      this.$emit('select', item)
     },
-    getDisplayName (item) {
+    getDisplayName(item) {
       return `${item.name}-${item.artists[0] && item.artists[0].name}`
     },
     _checkMore(data) {
       if (data.songs.length < 12 || ((this.page - 1) * limit) >= data.songCount) {
         this.hasMore = false
       }
-    }
+    },
   },
   watch: {
-    query (newQuery) {
+    query(newQuery) {
       if (!newQuery) {
         return
       }
       this.search(newQuery)
     }
+  },
+  components: {
+    'v-scroll': scroll,
+    // 'loading': load,
   }
-};
+}
 </script>
 
 <style scoped lang="stylus">
@@ -148,4 +146,3 @@ export default {
       font-size 14px
       color hsla(0,0%,100%,.3)
 </style>
-

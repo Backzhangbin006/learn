@@ -2,35 +2,34 @@
   <div class="search">
     <div class="search-box-wrapper">
       <!-- 搜索框 -->
-      <v-search-box @query="onQueryChange"></v-search-box>
+      <v-search-box @query="onQueryChange" ref="searchBox"></v-search-box>
     </div>
     <div class="shortcut-wrapper" ref="shortcutWrapper" v-show="!query">
-      <!-- 热门搜索 -->
       <v-scroll class="shortcut" ref="shortcut" :data="shortcut" :refreshDelay="refreshDelay">
         <div>
+      <!-- 热门搜索 -->
           <div class="hot-key">
             <h1 class="title">热门搜索</h1>
             <ul>
               <li
-                class="item"
-                v-for="(item, index) in hotKey"
-                :key="index"
-                @click="addQuery(item.first)"
-              >
-                <span>{{item.first}}</span>
+              class="item"
+              v-for="(item, index) in hotKey" 
+              :key="index"
+              @click="addQuery(item.first)">
+              <span>{{item.first}}</span>
               </li>
             </ul>
           </div>
-          <!-- 搜索历史 -->
+      <!-- 搜索历史 -->
           <div class="search-history" v-show="searchHistory.length">
             <h1 class="title">
-              <span>搜索历史</span>
+              <span class="text">搜索历史</span>
               <span class="clear" @click="showConfirm">
                 <i class="icon">&#xe612;</i>
               </span>
             </h1>
             <!-- 搜索历史列表 -->
-            <v-search-list :searches="searchHistory"></v-search-list>
+            <v-search-list :searches="searchHistory" @select="addQuery"></v-search-list>
           </div>
         </div>
       </v-scroll>
@@ -49,54 +48,44 @@ import searchList from '@/components/searchList'
 import suggest from '@/components/suggest'
 import api from '@/api'
 import { mapGetters } from 'vuex'
+import {searchMixin} from '@/common/mixin.js'
 export default {
   data () {
     return {
-      query: '',
-      refreshDelay: 1,
+      
+      hotKey: [],
       shortcut: [],
-      hotKey: [
-        // {first: '许嵩新歌发布'},
-        // {first: '许新歌发布'},
-        // {first: '嵩新歌发布'},
-        // {first: '许三高新歌发布'},
-        // {first: '许山高新歌发布'}
-      ]
+      
     }
   },
+  mixins:[searchMixin],
   components: {
     'v-search-box': searchBox,
     'v-scroll': scroll,
     'v-search-list': searchList,
-    'v-suggest':suggest
+    'v-suggest': suggest
   },
   methods: {
-    showConfirm () {},
-    onQueryChange(query) {
-      // console.log(query)
-      this.query = query
+    showConfirm () {
+
     },
-    saveSearch (data) {
-      console.log(data)
-      this.$store.dispatch('saveSearchHistory', data)
-    },
-    blurInput () {},
+    
+   
+    
     _getHotKey () {
       api.HotSearchKey().then((res) => {
-        if (res.code === 200) {    // 请求接口
-          this.hotKey = res.result.hots.slice(0, 10)    //  slice(0, 10)截取数组 0-10
+        if(res.code === 200) {
+          this.hotKey = res.result.hots.slice(0,10)
         }
       })
     }
+    
+  },
+  computed: {
+   
   },
   created() {
     this._getHotKey()
-    // this.$store.dispatch('saveSearchHistory', this.query)
-  },
-  computed: {
-    ...mapGetters([
-      'searchHistory'
-    ]),
   },
 }
 </script>
@@ -105,7 +94,7 @@ export default {
 @import "../../assets/css/function"
 .search
   overflow hidden
-  $-box-wrapper
+  &-box-wrapper
     margin px2rem(40px)
   .shortcut-wrapper
     position fixed
@@ -116,7 +105,7 @@ export default {
       height 100%
       overflow hidden
       .hot-key
-        margin px2rem(40px) px2rem(40px) px2rem(40px)
+        margin 0 px2rem(40px) px2rem(40px) px2rem(40px)
         .title
           margin-bottom px2rem(40px)
           font-size 14px
@@ -127,13 +116,12 @@ export default {
           margin 0 px2rem(20px) px2rem(20px) 0
           border-radius 6px
           font-size 14px
-          color hsla(0, 0%, 100%,0.3)
+          color hsla(0, 0%, 100%, 0.3)
           background #2f3054
       .search-history
         position relative
         margin 0 px2rem(40px)
         .title
-          justify-content space-between
           display flex
           align-items center
           height px2rem(80px)
