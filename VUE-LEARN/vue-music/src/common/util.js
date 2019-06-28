@@ -1,4 +1,4 @@
-export function debounce (func, delay) {  // 防抖 debounce
+export function debounce (func, delay) {
   let timer
   return function(...args) {
     if (timer) {

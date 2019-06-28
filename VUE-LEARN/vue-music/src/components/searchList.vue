@@ -1,3 +1,4 @@
+
 <template>
   <div class="search-list" v-show="searches.length">
     <transition-group name="list" tag="ul">
@@ -25,7 +26,7 @@ export default {
   },
   methods: {
     selectItem (item) {
-      this.$emit('select', emit)
+      this.$emit('select', item)
     }
   }
 }

@@ -7,20 +7,21 @@
     <div class="shortcut-wrapper" ref="shortcutWrapper" v-show="!query">
       <v-scroll class="shortcut" ref="shortcut" :data="shortcut" :refreshDelay="refreshDelay">
         <div>
-      <!-- 热门搜索 -->
+          <!-- 热门搜索 -->
           <div class="hot-key">
             <h1 class="title">热门搜索</h1>
             <ul>
               <li
-              class="item"
-              v-for="(item, index) in hotKey" 
-              :key="index"
-              @click="addQuery(item.first)">
-              <span>{{item.first}}</span>
+                class="item"
+                v-for="(item, index) in hotKey"
+                :key="index"
+                @click="addQuery(item.first)"
+              >
+                <span>{{item.first}}</span>
               </li>
             </ul>
           </div>
-      <!-- 搜索历史 -->
+          <!-- 搜索历史 -->
           <div class="search-history" v-show="searchHistory.length">
             <h1 class="title">
               <span class="text">搜索历史</span>
@@ -48,45 +49,34 @@ import searchList from '@/components/searchList'
 import suggest from '@/components/suggest'
 import api from '@/api'
 import { mapGetters } from 'vuex'
-import {searchMixin} from '@/common/mixin.js'
+import { searchMixin } from '@/common/mixin.js'
 export default {
   data () {
     return {
-      
-      hotKey: [],
       shortcut: [],
-      
+      hotKey: []
     }
   },
-  mixins:[searchMixin],
   components: {
     'v-search-box': searchBox,
     'v-scroll': scroll,
     'v-search-list': searchList,
     'v-suggest': suggest
   },
+  mixins: [searchMixin],
   methods: {
-    showConfirm () {
-
-    },
-    
-   
-    
+    showConfirm () {},
     _getHotKey () {
       api.HotSearchKey().then((res) => {
-        if(res.code === 200) {
-          this.hotKey = res.result.hots.slice(0,10)
+        if (res.code === 200) {
+          this.hotKey = res.result.hots.slice(0, 10)
         }
       })
     }
-    
   },
-  computed: {
-   
-  },
-  created() {
+  created () {
     this._getHotKey()
-  },
+  }
 }
 </script>
 
