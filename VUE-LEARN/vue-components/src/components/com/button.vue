@@ -1,44 +1,48 @@
 <template>
-  <button :class="'i-button-size' + size" :disabled="disabled" @click="handleClick">
+  <button :class="'i-button-size'+ size" :disabled="disabled" @click="handleClick">
     <slot></slot>
+
+
   </button>
 </template>
 
 <script>
-import bus from '@/bus/bus'
-function oneOf (value, validList) {
-  for (let i = 0; i < validList.length; i++) {
+function oneOf(value,validList){
+  for(let i = 0; i< validList.length;i++){
     if (value ===validList[i]) {
       return true
     }
   }
   return false
 }
+import bus from '@/bus/bus'
 export default {
-  props: {
-    size: {
-      validator (value) {
-        return oneOf(value, ['small', 'large', 'default'])
-      },
-      default: 'default'
-    },
+  props:{
     disabled:{
-      type: Boolean,
-      default: false,
+      type:Boolean,
+      default:false
+
+    },
+    size:{
+      validator(value) {
+        return oneOf(value,['small','large','default'])
+      },
+      default:'default'
     }
   },
   data () {
     return {
-      msg:'我是button组件的数据'
+      msg:'我是button组件数据'
     }
   },
   methods:{
-    handleClick(event) {
+    handleClick(event){
       // console.log(event)
       // console.log(123)
-      // this.$emit('on-click', this.msg)
-      bus.$emit('todo', this.msg)
-    }
+      // this.$emit('on-click',this.msg)
+      bus.$emit('todo',this.msg)
+    },
+   
   }
 }
 </script>
@@ -47,12 +51,12 @@ export default {
 button{
   border-radius: 5px;
   cursor: pointer;
-  outline: none;
+  outline: none
 }
 .i-button-sizelarge{
   padding: 12px;
 }
-.i-button-sizefault{
+.i-button-sizedefualt{
   padding: 8px;
 }
 .i-button-sizesmall{

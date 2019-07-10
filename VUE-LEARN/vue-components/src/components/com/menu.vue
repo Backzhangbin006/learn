@@ -1,6 +1,7 @@
 <template>
   <div class="menu">
     {{message}}
+    <!-- {{name.name}} -->
     {{app.user}}
   </div>
 </template>
@@ -8,15 +9,15 @@
 <script>
 import bus from '@/bus/bus'
 export default {
-  inject: ['app'],
-  data() {
+  inject:['app'],
+  data () {
     return {
-      message:'aaaaa'
+      message:'aaaaaaaa'
     }
   },
-  created() {
+  created(){
     let self = this
-    bus.$on('todo', (val) => {
+    bus.$on('todo',(val)=>{
       console.log(val)
       self.message = val
     })
