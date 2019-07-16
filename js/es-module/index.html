@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script type="module">
+    // 要先导入后解构
+    import obj from './a.js'; 
+    const { a, b } = obj;
+    // import {a,b} from './a.js';   错误的用法
+  </script>
+</body>
+</html>
