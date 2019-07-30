@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
   // res.setHeader('Content-Type', 'application/json')
   function readImage(path, res) {
     fs.readFile(path, 'binary', function(err, file) {
-      if(err) {
+      if (err) {
         return
       } else {
         res.writeHead(200, {'Content-Type': 'image/jpeg'})

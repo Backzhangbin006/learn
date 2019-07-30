@@ -2,49 +2,71 @@
   <div class="login">
     <div class="login-bg">
       <h1 class="login-title">
-        <img src="../../assets/img/logo.png" alt />
+        <img src="../../assets/img/logo.png" alt="">
       </h1>
       <md-field class="login-input">
-      <md-input-item
-        ref="name"
-        title="手机号"
-        placeholder="请输入手机号"
-        v-model="user.name"
-        type="phone"
-      ></md-input-item>
-      <md-input-item
-        ref="password"
-        title="密码"
-        placeholder="请输入密码"
-        v-model="user.password"
-        type="password"
+        <md-input-item
+          ref="name"
+          title="手机号"
+          placeholder="请输入手机号"
+          v-model="user.name"
+          type="phone"
         ></md-input-item>
-    </md-field>
-    <div class="login-btn">
-      <span @click="loginOnClick">
-        <!-- <svg-icon class="svg-btn" icon-class="login-btn"></svg-icon> -->
-        <md-button type="primary" round>登录</md-button>
-      </span>
-    </div>
+        <md-input-item
+          v-model="user.password"
+          type="password"
+          ref="id"
+          title="密码"
+          placeholder="请输入密码"
+          ></md-input-item>
+      </md-field>
+      <div class="login-btn">
+        <span @click="loginOnClick">
+          <!-- <svg-icon class="svg-btn" icon-class="login-btn"></svg-icon> -->
+          <md-button type="primary" round>登录</md-button>
+        </span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { Toast } from 'mand-mobile'
+import { mapActions } from 'vuex'
 export default {
-  name: 'login',
+  name: 'Login',
   data () {
     return {
+      userData: null,
       user: {
         name: '15330734121',
-        password: '123456'
+        password: '12345'
       }
     }
   },
   methods: {
-    loginOnClick() {}
+    loginOnClick () {
+      this.loginAjax()
+    },
+    loginAjax() {
+      let params = {
+        userName: this.user.name,
+        passWord: this.user.password
+      }
+      this.$http.post('/user', params).then(res => {
+        this.userData = res.data.data
+        let tmpUser = JSON.stringify(this.userData)
+        console.log(res.data.data)
+        localStorage.setItem('user',tmpUser)
+        //存到vuex里面
+        this.setUser(this.userData)
+        Toast.succeed(`欢迎回来，${this.userData.name}`, 1500)
+        this.$router.push({path: '/trip'})
+      })
+    },
+    ...mapActions(['setUser','setUserData'])
   }
-};
+}
 </script>
 
 <style lang='stylus' scoped>
@@ -98,4 +120,3 @@ export default {
     height 50px
     font-size 22px
 </style>
-

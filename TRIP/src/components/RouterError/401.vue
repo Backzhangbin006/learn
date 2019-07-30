@@ -22,9 +22,9 @@ export default {
     [ResultPage.name]: ResultPage,
   },
 }
-
 </script>
-<style lang="stylus" scoped>
+
+<style lang='stylus' scoped>
   .md-example-child-result-page-3
     background #ffffff
     position absolute
