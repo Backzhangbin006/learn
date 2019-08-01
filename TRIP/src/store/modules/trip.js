@@ -11,7 +11,7 @@ export default {
   },
   mutations:{
     [types.SET_USER] () {
-      state.user = data
+      this.state.user = this.data
     }
   },
   actions: {
